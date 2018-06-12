@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+	<Resource name="jdbc/BBS" auth="Container" type="javax.sql.DataSource"
+		driverClassName="com.mysql.jdbc.Driver" maxTotal="50" maxIdle="10"
+		maxWaitMillis="10000" username="root" password="wldus1818"
+		url="jdbc:mysql://localhost:3306/BBS?useUnicode=true&amp;characterEncoding=utf8" />
+</Context>
