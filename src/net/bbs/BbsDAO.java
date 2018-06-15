@@ -89,4 +89,27 @@ public class BbsDAO {
 		}
 		return false;
 	}
+	
+	public Bbs getBbs(int bbsID) {
+		String sql = "SELECT * FROM BBS WHERE bbsID = ?";
+		try(Connection connection = DB.getConnection("BBS");
+				PreparedStatement statement= connection.prepareStatement(sql)){
+			statement.setInt(1, bbsID);
+			try(ResultSet resultSet = statement.executeQuery();) {
+				if(resultSet.next()) {
+					Bbs bbs = new Bbs();
+					bbs.setBbsID(resultSet.getInt(1));
+					bbs.setBbsTitle(resultSet.getString(2));
+					bbs.setUserID(resultSet.getString(3));
+					bbs.setBbsDate(resultSet.getString(4));
+					bbs.setBbsContent(resultSet.getString(5));
+					bbs.setBbsAvailable(resultSet.getInt(6));
+					return bbs;
+				}
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }
