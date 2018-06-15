@@ -112,4 +112,30 @@ public class BbsDAO {
 		}
 		return null;
 	}
+	
+	public int update(int bbsID, String bbsTitle, String bbsContent) {
+		String sql = "UPDATE BBS SET bbsTitle = ?, bbsContent = ? WHERE bbsID = ?";
+		try(Connection connection = DB.getConnection("BBS");
+				PreparedStatement statement= connection.prepareStatement(sql)){
+			statement.setString(1, bbsTitle);
+			statement.setString(2, bbsContent);
+			statement.setInt(3, bbsID);
+			return statement.executeUpdate();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return -1; //데이터 베이스 오류
+	}
+	
+	public int delete(int bbsID) {
+		String sql = "UPDATE BBS SET bbsAvailable = 0 WHERE bbsID = ?";
+		try(Connection connection = DB.getConnection("BBS");
+				PreparedStatement statement= connection.prepareStatement(sql)){
+			statement.setInt(1, bbsID);
+			return statement.executeUpdate();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return -1; //데이터 베이스 오류
+	}
 }
