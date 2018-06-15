@@ -3,6 +3,7 @@ package net.bbs;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 public class BbsDAO {
 	public String getDate() {
@@ -47,5 +48,45 @@ public class BbsDAO {
 			e.printStackTrace();
 		}
 		return -1; //데이터 베이스 오류
+	}
+
+	public ArrayList<Bbs> getList(int pageNumber) {
+		String sql = "SELECT * FROM BBS WHERE bbsID < ? AND bbsAvailable = 1 ORDER BY bbsID DESC LIMIT 10";
+		ArrayList<Bbs> list = new ArrayList<Bbs>();
+		try(Connection connection = DB.getConnection("BBS");
+				PreparedStatement statement= connection.prepareStatement(sql)){
+			statement.setInt(1, getNext() - (pageNumber - 1) * 10);
+			try(ResultSet resultSet = statement.executeQuery();) {
+				while(resultSet.next()) {
+					Bbs bbs = new Bbs();
+					bbs.setBbsID(resultSet.getInt(1));
+					bbs.setBbsTitle(resultSet.getString(2));
+					bbs.setUserID(resultSet.getString(3));
+					bbs.setBbsDate(resultSet.getString(4));
+					bbs.setBbsContent(resultSet.getString(5));
+					bbs.setBbsAvailable(resultSet.getInt(6));
+					list.add(bbs);
+				}
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	public boolean nextPage(int pageNumber) {
+		String sql = "SELECT * FROM BBS WHERE bbsID < ? AND bbsAvailable =1";
+		try(Connection connection = DB.getConnection("BBS");
+				PreparedStatement statement= connection.prepareStatement(sql)){
+			statement.setInt(1, getNext() - (pageNumber - 1) * 10);
+			try(ResultSet resultSet = statement.executeQuery();) {
+				if(resultSet.next()) {
+					return true;
+				}
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 }
